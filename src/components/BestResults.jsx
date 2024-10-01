@@ -7,14 +7,14 @@ export function BestResults() {
     // size will use later to get best results by size
 
     useEffect(() => {
-        fetch('http://fin.local/rest/V1/digits/best').then((response) => {
-            return response.json()
-        }).then(
-            (resData) => {
-                setBestResult(resData);
-            }
-        )
-    }, [gameCount])
+        async function fetchBestResult() {
+            const response = await fetch('http://fin.local/rest/V1/digits/best');
+            const resData = await response.json();
+            setBestResult(resData);
+        }
+
+        fetchBestResult();
+    }, [gameCount, size])
     return (
         <>
             <div className="best-results">
