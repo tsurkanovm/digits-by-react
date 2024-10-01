@@ -1,11 +1,10 @@
 import {Results} from "./Results.jsx";
 import Move from "./Move.jsx";
-import {useCallback, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {TimerHandler} from "./TimerHandler.jsx";
 import {Timer} from "./Timer.jsx";
 import ResultModal from "./ResultModal.jsx";
 import {Sizer} from "./Sizer.jsx";
-
 
 export const GameBoard = () => {
     const [movesArray, setMove] = useState([]);
@@ -13,24 +12,19 @@ export const GameBoard = () => {
     const [timeResult, setTimeResult] = useState(0);
     const resDialog = useRef();
 
-    //unique Id
-    const setNewMove = useCallback((newMove) => {
+    function setNewMove(newMove)  {
             setMove(prevMoves =>
             [
                 ...prevMoves,
                 newMove
             ]
         )
-    }, []);
+    }
 
-    const setTimeResultCallBack = useCallback((result) => {
-        setTimeResult(result);
-    }, []);
-
-    const resetGame = useCallback(() => {
+    function resetGame() {
         setMove([]);
         setTimeResult(0);
-    }, []);
+    }
 
     if (timeResult) {
         resDialog.current.open();
@@ -42,7 +36,7 @@ export const GameBoard = () => {
             <Results moves={movesArray}/>
             <Move setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>
             { movesArray.length && !timeResult ?
-                <TimerHandler gameOver={gameOver} setTimeResult={setTimeResultCallBack}/>
+                <TimerHandler gameOver={gameOver} setTimeResult={setTimeResult}/>
                 :
                 <Timer time={0}/>
             }
