@@ -1,18 +1,19 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useContext} from 'react';
 
 import {getCurrentScore, initiateGoal, isMoveHasUniqueDigits} from "../util/core.js";
+import {GameContext} from "../store/game-context.jsx";
 
 export default function Move({setMove, gameOver, setGameOver}) {
-
     const [canMove, setCanMove] = useState(false);
-    const [gameCount, setGameCount] = useState(0);
     const [currentValue, setCurrentValue] = useState('');
     const [previousValue, setPreviousValue] = useState('');
 
+    const {size, gameCount, setGameCount} =  useContext(GameContext);
+
     const goal = useMemo(() => {
-         return initiateGoal();
+         return initiateGoal(size);
     },
-        [gameCount]
+        [gameCount, size]
     );
 
     function takeMove(currentMove)
@@ -20,7 +21,7 @@ export default function Move({setMove, gameOver, setGameOver}) {
         const currentScore = getCurrentScore(currentMove, goal);
         setMove({move:currentMove, score:currentScore, id: Math.random() * 1000});
 
-        if (parseInt(currentScore[currentScore.length - 1]) === 4) {
+        if (parseInt(currentScore[currentScore.length - 1]) === size) {
             setGameOver(true);
             setGameCount((prev) => prev + 1);
         }
@@ -40,13 +41,13 @@ export default function Move({setMove, gameOver, setGameOver}) {
         const value = event.target.value;
         setCurrentValue(value);
 
-        if (value && (value.length > 4 || !/\d+$/.test(value) || !isMoveHasUniqueDigits(value))) {
+        if (value && (value.length > size || !/\d+$/.test(value) || !isMoveHasUniqueDigits(value))) {
             setCurrentValue(previousValue);
         } else {
             setPreviousValue(value);
         }
 
-        if (value && value.length === 4 && /\d+$/.test(value)) {
+        if (value && value.length === size && /\d+$/.test(value)) {
             setCanMove(true);
         } else {
             setCanMove(false);

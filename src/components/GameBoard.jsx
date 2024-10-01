@@ -12,7 +12,6 @@ export const GameBoard = () => {
     const [gameOver, setGameOver] = useState(true);
     const [timeResult, setTimeResult] = useState(0);
     const resDialog = useRef();
-    const [size, setSize] = useState('4');
 
     //unique Id
     const setNewMove = useCallback((newMove) => {
@@ -39,9 +38,8 @@ export const GameBoard = () => {
 
     return (
         <>
-            <Sizer size={size} setSize={setSize} gameOver={gameOver}/>
+            <Sizer gameOver={gameOver}/>
             <Results moves={movesArray}/>
-            {/*try to use key=gameOver*/}
             <Move setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>
             { movesArray.length && !timeResult ?
                 <TimerHandler gameOver={gameOver} setTimeResult={setTimeResultCallBack}/>

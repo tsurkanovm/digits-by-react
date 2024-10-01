@@ -1,4 +1,4 @@
-export function initiateGoal() {
+export function initiateGoal(size) {
     function shuffle(array) {
         let currentIndex = array.length, temporaryValue, randomIndex;
         while (currentIndex !== 0) {
@@ -12,8 +12,9 @@ export function initiateGoal() {
     }
 
     let buffer = Array.from({length: 10}, (value, key) => key);
-    const goal = shuffle(buffer).slice(0, 4);
+    const goal = shuffle(buffer).slice(0, size);
     console.log(goal);
+    console.log(size);
     return goal;
 }
 

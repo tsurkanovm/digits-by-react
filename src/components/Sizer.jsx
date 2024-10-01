@@ -1,10 +1,11 @@
-import {useState} from "react";
+import {useContext} from "react";
+import {GameContext} from "../store/game-context.jsx";
 
-export function Sizer({size, setSize, gameOver}) {
-
+export function Sizer({gameOver}) {
+    const {size, setSize} =  useContext(GameContext);
 
     const handleChange = () => {
-        setSize(prevSize => (prevSize === '4' ? '5' : '4'));
+        setSize(prevSize => (prevSize === 4 ? 5 : 4));
     };
 
     return (
@@ -13,7 +14,7 @@ export function Sizer({size, setSize, gameOver}) {
             <label className="switch">
                 <input
                     type="checkbox"
-                    checked={size === '5'}
+                    checked={size === 5}
                     onChange={handleChange}
                     disabled={!gameOver}
                 />
