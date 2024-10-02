@@ -1,6 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {GameContext} from "../store/game-context.jsx";
 import ErrorBlock from "./ErrorBlock.jsx";
+import {getBestResultsFromServer} from "../util/backend.js";
 
 export function BestResults() {
     const [bestResult, setBestResult] = useState([]);
@@ -11,20 +12,14 @@ export function BestResults() {
     useEffect(() => {
         async function fetchBestResult() {
             try {
-                const response = await fetch('http://fin.local/rest/V1/digits/best');
-                const resData = await response.json();
-
-                if (!response.ok) {
-                    throw Error('Failed to fetch best results');
-                }
-
-                setBestResult(resData);
+                setBestResult(await getBestResultsFromServer());
             } catch (error) {
                 setError({message: error.message || 'Could not fetch best results. Please try again.'});
             }
         }
 
         fetchBestResult();
+        console.dir(bestResult);
 
     }, [gameCount, size])
 
