@@ -45,11 +45,15 @@ h1 em {
   color: #c6f4f2;
 }
 
-.best-results p {
+.best-results p, .error {
   font-size: 0.8rem;
   margin: 0;
   text-align: center;
   color: #c6f4f2;
+}
+
+.error {
+  background-color: #e178ed;
 }
 
 #player {
