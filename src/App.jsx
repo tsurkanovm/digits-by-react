@@ -4,12 +4,12 @@ import {GameContextProvider} from "./store/game-context.jsx";
 
 
 function App() {
-  return (
-    <GameContextProvider>
-     <GameBoard/>
-    <BestResults/>
-    </GameContextProvider>
-  );
+    return (
+        <GameContextProvider>
+            <GameBoard/>
+            <BestResults/>
+        </GameContextProvider>
+    );
 }
 
 export default App;

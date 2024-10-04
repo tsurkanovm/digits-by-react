@@ -5,24 +5,23 @@ import {TimerHandler} from "./TimerHandler.jsx";
 import {Timer} from "./Timer.jsx";
 import ResultModal from "./ResultModal.jsx";
 import {Sizer} from "./Sizer.jsx";
-import {sendResultToServer} from "../util/backend.js";
 import ErrorBlock from "./ErrorBlock.jsx";
 import {GameContext} from "../store/game-context.jsx";
+import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.js";
+import {useMutation} from "@apollo/client";
 
 export const GameBoard = () => {
     const [movesArray, setMove] = useState([]);
     const [gameOver, setGameOver] = useState(true);
     const [timeResult, setTimeResult] = useState(0);
     const resDialog = useRef();
-    const {size} = useContext(GameContext);
+    const { size } = useContext(GameContext);
 
-    function setNewMove(newMove)  {
-            setMove(prevMoves =>
-            [
-                ...prevMoves,
-                newMove
-            ]
-        )
+    // Apollo mutation hook
+    const [setCurrentResult, { data, loading, error }] = useMutation(SET_CURRENT_RESULT);
+
+    function setNewMove(newMove) {
+        setMove(prevMoves => [...prevMoves, newMove])
     }
 
     function resetGame() {
@@ -34,13 +33,19 @@ export const GameBoard = () => {
         setTimeResult(timeResult);
         if (timeResult) {
             try {
-                await sendResultToServer(timeResult, movesArray.length, size);
-            } catch (error) {
-                // @todo create error status and trigger here
-                return <ErrorBlock title='An error occured!' message={error.message} />;
-            }
+                const response = await setCurrentResult({
+                    variables: {
+                        result: getCurrentResultInput(size, movesArray.length, timeResult)
+                    }
+                });
 
-            resDialog.current.open();
+                console.log("Response from server:", response.data);
+                console.dir(response.data);
+                resDialog.current.open();
+            } catch (error) {
+                console.error("Error sending result to server:", error);
+                return <ErrorBlock title='An error occurred!' message={error.message} />;
+            }
         }
     }
 
@@ -55,7 +60,6 @@ export const GameBoard = () => {
                 <Timer time={0}/>
             }
             <ResultModal ref={resDialog} timeResult={timeResult} movesCount={movesArray.length} onClose={resetGame}/>
-        {/*    send result to the server */}
         </>
     );
-}
+};

@@ -1,42 +1,39 @@
-import {useContext, useEffect, useState} from "react";
-import {GameContext} from "../store/game-context.jsx";
-import ErrorBlock from "./ErrorBlock.jsx";
-import {getBestResultsFromServer} from "../util/backend.js";
+import { useContext, useEffect } from "react";
+import { GameContext } from "../store/game-context";
+import ErrorBlock from "./ErrorBlock";
+import { useLazyQuery } from "@apollo/client";
+import {GET_BEST_RESULTS} from "../util/ql-backend.js";
 
 export function BestResults() {
-    const [bestResult, setBestResult] = useState([]);
-    const [error, setError] = useState(null);
-    const {size, gameCount} = useContext(GameContext);
-    // size will use later to get best results by size
+    const { size, gameCount } = useContext(GameContext);
+
+    const [fetchResults, { called, loading, data, error }]
+        = useLazyQuery(GET_BEST_RESULTS, {
+        variables: { size: `size_${size}` }
+    });
 
     useEffect(() => {
-        async function fetchBestResult() {
-            try {
-                setBestResult(await getBestResultsFromServer());
-            } catch (error) {
-                setError({message: error.message || 'Could not fetch best results. Please try again.'});
-            }
-        }
+        fetchResults();
+    }, [size, gameCount, fetchResults]);
 
-        fetchBestResult();
-        console.dir(bestResult);
+    if (!called) return <p>No request made yet.</p>;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <ErrorBlock title='An error occurred!' message={error.message} />;
 
-    }, [gameCount, size])
-
-    if (error) {
-        return <ErrorBlock title='An error occured!' message={error.message}/>
+    if (data) {
+        return (
+            <>
+                <div className="best-results">
+                    <p><strong>Best results:</strong></p>
+                    {data.bestResults.map((result, index) =>
+                        <p key={index}>
+                            {`Score - ${result.hits} with time - ${result.time}`}
+                        </p>
+                    )}
+                </div>
+            </>
+        );
     }
 
-    return (
-        <>
-            <div className="best-results">
-                <p><strong> Best results: </strong></p>
-                {bestResult.map((result) =>
-                    <p key={Math.random() * 1000}>
-                        {`Score - ${result.hits} with time - ${result.time}`}
-                    </p>
-                )}
-            </div>
-        </>
-    );
+    return null;
 }
