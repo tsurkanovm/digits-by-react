@@ -1,6 +1,8 @@
 import { GameContext } from "../store/game-context";
 import ErrorBlock from "./ErrorBlock";
 import {GET_BEST_RESULTS} from "../util/ql-backend.js";
+import {useContext} from "react";
+import {useQuery} from "@apollo/client";
 
 export function BestResults() {
     const { size, gameCount } = useContext(GameContext);
