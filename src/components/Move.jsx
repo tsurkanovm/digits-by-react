@@ -8,7 +8,7 @@ export default function Move({setMove, gameOver, setGameOver}) {
     const [currentValue, setCurrentValue] = useState('');
     const [previousValue, setPreviousValue] = useState('');
 
-    const {size, gameCount, setGameCount} =  useContext(GameContext);
+    const {size, gameCount} =  useContext(GameContext);
 
     const goal = useMemo(() => {
          return initiateGoal(size);
@@ -23,7 +23,6 @@ export default function Move({setMove, gameOver, setGameOver}) {
 
         if (parseInt(currentScore[currentScore.length - 1]) === size) {
             setGameOver(true);
-            setGameCount((prev) => prev + 1);
         }
     }
 

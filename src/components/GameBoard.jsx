@@ -15,7 +15,7 @@ export const GameBoard = () => {
     const [gameOver, setGameOver] = useState(true);
     const [timeResult, setTimeResult] = useState(0);
     const resDialog = useRef();
-    const { size } = useContext(GameContext);
+    const { size, setGameCount } = useContext(GameContext);
 
     // Apollo mutation hook
     const [setCurrentResult, { data, loading, error }] = useMutation(SET_CURRENT_RESULT);
@@ -25,6 +25,7 @@ export const GameBoard = () => {
     }
 
     function resetGame() {
+        setGameCount((prev) => prev + 1);
         setMove([]);
         setTimeResult(0);
     }
