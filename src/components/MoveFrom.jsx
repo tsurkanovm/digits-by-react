@@ -100,30 +100,30 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+        <form onSubmit={handleSubmit} className="">
             <section id="player">
-                {values.map((value, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        value={value}
-                        onChange={(e) => handleChange(index, e)}
-                        maxLength="1"
-                        required
-                        disabled={isInputDisabled(index)}
-                        style={{
-                            width: '30px',
-                            marginRight: '5px',
-                            borderColor: invalidIndex === index && value !== '' ? 'red' : 'initial'
-                        }}
-                    />
-                ))}
-                <button type="submit" disabled={isMoveBtnDisabled()}>Move</button>
+                <div className="inputs-wrapper">
+                    {values.map((value, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleChange(index, e)}
+                            maxLength="1"
+                            required
+                            disabled={isInputDisabled(index)}
+                            style={{
+                                borderColor: invalidIndex === index && value !== '' ? 'red' : 'initial'
+                            }}
+                        />
+                    ))}
+                </div>
                 {errors && (
-                    <div style={{ color: 'red', marginTop: '10px', width: '100%' }}>
+                    <div className="error-wrap">
                         {errors}
                     </div>
                 )}
+                <button className="action-btn" type="submit" disabled={isMoveBtnDisabled()}>Move</button>
             </section>
         </form>
     );

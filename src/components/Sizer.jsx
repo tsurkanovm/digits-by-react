@@ -9,8 +9,8 @@ export function Sizer({gameOver}) {
     };
 
     return (
-        <div id='player'>
-            <p>Size - {size}</p>
+        <div id='player' className="size-wrapper">
+            <h2>Size - {size}</h2>
             <label className="switch">
                 <input
                     type="checkbox"

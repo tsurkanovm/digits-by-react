@@ -15,12 +15,13 @@ body {
 }
 
 #content {
-  max-width: 60rem;
+  max-width: 70vw;
   margin: 2rem auto;
   padding: 2rem;
   background: radial-gradient(#0b201d, #021619);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  text-align: center;
 }
 
 h1 {
@@ -41,14 +42,12 @@ h1 em {
 .results p {
   font-size: 1.2rem;
   margin: 0;
-  text-align: center;
   color: #c6f4f2;
 }
 
 .best-results p, .error {
   font-size: 0.8rem;
   margin: 0;
-  text-align: center;
   color: #c6f4f2;
 }
 
@@ -56,44 +55,70 @@ h1 em {
   background-color: #e178ed;
 }
 
-#player {
-  text-align: center;
-}
-
-#player h2 {
+.size-wrapper h2 {
   color: #54a399;
+  margin-right: 16px;
 }
 
-#player p {
+.size-wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
-#player input {
-  font: inherit;
+.inputs-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputs-wrapper input + input {
+  margin-left: 8px;
+}
+
+.inputs-wrapper input {
+  font-size: 2rem;
   border: 1px solid #54a399;
   background-color: #192f2b;
   border-radius: 4px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
   padding: 0.25rem;
   color: #d1f0ec;
+  outline: none;
+  cursor: default;
+  text-align: center;
+  height: 50px;
+  width: 50px;
 }
 
-#player button {
+.inputs-wrapper input:disabled {
+  cursor: not-allowed;
+  background-color: lightslategrey;
+}
+
+.inputs-wrapper input::placeholder {
+  font-size: 2rem;
+}
+
+.action-btn {
   cursor: pointer;
   background-color: #54a399;
   border: 1px solid #54a399;
-  padding: 0.4rem 1rem;
+  padding: 0.45rem 6.5rem;
   color: #061e1a;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
+  font-size: 2rem;
+  margin-top: 24px;
 }
 
-#player button:hover {
+.action-btn:hover {
   background-color: #3c8379;
   border-color: #3c8379;
+}
+
+.error-wrap {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 8px;
 }
 
 #challenges {
@@ -105,7 +130,7 @@ h1 em {
 }
 
 .challenge {
-  width: 22rem;
+  width: 40vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -237,8 +262,8 @@ h1 em {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 24px;
 }
 
 .switch input {
@@ -262,8 +287,8 @@ h1 em {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 16px;
+  width: 16px;
   left: 4px;
   bottom: 4px;
   background-color: white;
