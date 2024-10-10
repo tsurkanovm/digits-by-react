@@ -5,37 +5,42 @@ import {getCurrentScore, initiateGoal} from "../util/core.js";
 const MoveForm = ({setMove, gameOver, setGameOver}) => {
     const {size, gameCount} =  useContext(GameContext);
     const [values, setValues] = useState([]);
-    const [errors, setErrors] = useState('');
-    const [invalidIndex, setInvalidIndex] = useState(null);
+    const [errorPointer, setErrorPointer] = useState(null);
 
     useEffect(() => {
         setValues(Array(size).fill(''));
     }, [size]);
 
     function validateMove(newValues) {
-        let newError = '';
-        let newInvalidIndex = null;
+        let errorMsg = '';
+        let inputIndex = null;
         const uniqueValues = new Set();
-        for (let i = 0; i < size; i++) {
-            if (newValues[i] === '') {
+        for (inputIndex = 0; inputIndex < size; inputIndex++) {
+            if (newValues[inputIndex] === '') {
                 continue;
             }
 
-            if (!/^[0-9]$/.test(newValues[i])) {
-                newInvalidIndex = i;
-                newError = 'All inputs must be a single digit number.';
+            if (!/^[0-9]$/.test(newValues[inputIndex])) {
+                errorMsg = 'All inputs must be a single digit number.';
                 break;
-            } else if (uniqueValues.has(newValues[i])) {
-                newInvalidIndex = i;
-                newError = 'All inputs must contain unique single digit numbers.';
+            } else if (uniqueValues.has(newValues[inputIndex])) {
+                errorMsg = 'All inputs must contain unique single digit numbers.';
                 break;
             } else {
-                uniqueValues.add(newValues[i]);
+                uniqueValues.add(newValues[inputIndex]);
             }
         }
 
-        setErrors(newError);
-        setInvalidIndex(newInvalidIndex);
+        if (errorMsg) {
+            setErrorPointer(
+                {
+                    errorMsg: errorMsg,
+                    inputIndex: inputIndex,
+                }
+            );
+        } else if (errorPointer) {
+            setErrorPointer(null);
+        }
     }
 
     const handleChange = (index, event) => {
@@ -53,13 +58,11 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        //validateMove(values);
-        if (isMoveIncomplete() || invalidIndex !== null) {
-            setErrors('All inputs must be filled with a unique single digit number.');
-        } else {
+        if (!isMoveIncomplete() && errorPointer === null) {
             if (gameOver) {
                 setGameOver(false);
             }
+
             takeMove(values.join(''));
             setValues(Array(size).fill(''));
         }
@@ -82,12 +85,12 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
     }
 
     const isInputDisabled = (index) => {
-        if (invalidIndex === null || invalidIndex === index) {
+        if (errorPointer === null || errorPointer.inputIndex === index) {
             return false;
         }
 
         for (let i = 0; i < size; i++) {
-            if (invalidIndex < i) {
+            if (errorPointer.inputIndex < i) {
                 return true;
             }
         }
@@ -96,7 +99,11 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
     };
 
     function isMoveBtnDisabled() {
-        return invalidIndex !== null || isMoveIncomplete();
+        return errorPointer !== null || isMoveIncomplete();
+    }
+
+    function isInputHasError(index, value) {
+        return value !== '' && errorPointer && errorPointer.inputIndex === index;
     }
 
     return (
@@ -113,14 +120,14 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
                             required
                             disabled={isInputDisabled(index)}
                             style={{
-                                borderColor: invalidIndex === index && value !== '' ? 'red' : 'initial'
+                                borderColor: isInputHasError(index, value) ? 'red' : 'initial'
                             }}
                         />
                     ))}
                 </div>
-                {errors && (
+                {errorPointer && (
                     <div className="error-wrap">
-                        {errors}
+                        {errorPointer.errorMsg}
                     </div>
                 )}
                 <button className="action-btn" type="submit" disabled={isMoveBtnDisabled()}>Move</button>
