@@ -1,5 +1,5 @@
 import {Results} from "./Results.jsx";
-import Move from "./Move.jsx";
+// import Move from "./Move.jsx";
 import {useContext, useRef, useState} from "react";
 import {TimerHandler} from "./TimerHandler.jsx";
 import {Timer} from "./Timer.jsx";
@@ -9,6 +9,7 @@ import ErrorBlock from "./ErrorBlock.jsx";
 import {GameContext} from "../store/game-context.jsx";
 import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.js";
 import {useMutation} from "@apollo/client";
+import MoveFrom from "./MoveFrom.jsx";
 
 export const GameBoard = () => {
     const [movesArray, setMove] = useState([]);
@@ -42,11 +43,12 @@ export const GameBoard = () => {
 
                 console.log("Response from server:", response.data);
                 console.dir(response.data);
-                resDialog.current.open();
             } catch (error) {
                 console.error("Error sending result to server:", error);
                 return <ErrorBlock title='An error occurred!' message={error.message} />;
             }
+
+            resDialog.current.open();
         }
     }
 
@@ -54,7 +56,8 @@ export const GameBoard = () => {
         <>
             <Sizer gameOver={gameOver}/>
             <Results moves={movesArray}/>
-            <Move setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>
+            {/*<Move setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>*/}
+            <MoveFrom  setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>
             { movesArray.length && !timeResult ?
                 <TimerHandler gameOver={gameOver} setTimeResult={setTimeResultHandler}/>
                 :
