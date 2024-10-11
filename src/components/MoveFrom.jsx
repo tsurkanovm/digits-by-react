@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {GameContext} from "../store/game-context.jsx";
 import {getCurrentScore, initiateGoal} from "../util/core.js";
 
@@ -6,10 +6,22 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
     const {size, gameCount} =  useContext(GameContext);
     const [values, setValues] = useState([]);
     const [errorPointer, setErrorPointer] = useState(null);
+    const inputsRef = useRef([]);
 
     useEffect(() => {
         setValues(Array(size).fill(''));
     }, [size]);
+
+    function setFocus(ind) {
+        inputsRef.current[ind].setAttribute("tabindex", "0");
+        inputsRef.current[ind].focus();
+    }
+
+    useEffect(() => {
+        setTimeout(() => { // needs to be sure that all DOM is loaded
+            setFocus(0); // set focus to the first input
+        }, 0);
+    }, []);
 
     function validateMove(newValues) {
         let errorMsg = '';
@@ -50,6 +62,9 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         setValues(newValues);
 
         validateMove(newValues);
+        if (value) {
+            setFocus(index + 1);
+        }
     };
 
     function isMoveIncomplete() {
@@ -106,6 +121,12 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         return value !== '' && errorPointer && errorPointer.inputIndex === index;
     }
 
+    const handleKeyDown = (index, event) => {
+        if (event.key === 'Backspace' && !event.target.value && index > 0) {
+            setFocus(index - 1);
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit} className="">
             <section id="player">
@@ -113,15 +134,15 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
                     {values.map((value, index) => (
                         <input
                             key={index}
+                            ref={(el) => (inputsRef.current[index] = el)}
                             type="text"
                             value={value}
                             onChange={(e) => handleChange(index, e)}
+                            onKeyDown={(e) => handleKeyDown(index, e)}
                             maxLength="1"
                             required
                             disabled={isInputDisabled(index)}
-                            style={{
-                                borderColor: isInputHasError(index, value) ? 'red' : 'initial'
-                            }}
+                            className={isInputHasError(index, value) ? 'error-border' : null}
                         />
                     ))}
                 </div>

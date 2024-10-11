@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --error-color: #e178ed;
+}
+
 body {
   margin: 0;
   font-family: 'Quicksand', sans-serif;
@@ -116,9 +120,13 @@ h1 em {
 }
 
 .error-wrap {
-  color: red;
+  color: var(--error-color);
   font-size: 0.8rem;
   margin-top: 8px;
+}
+
+.inputs-wrapper input.error-border {
+  border-color:var(--error-color);
 }
 
 #challenges {
