@@ -27,7 +27,8 @@ export const GameBoard: React.FC = () => {
     const [setCurrentResult] = useMutation(SET_CURRENT_RESULT);
 
     function setNewMove(newMove: MoveObj) {
-        setMove(prevMoves => [...prevMoves, newMove])
+        //setMove(prevMoves => [...prevMoves, newMove]);
+        setMove(prevMoves => prevMoves.concat(newMove)); // the same as above
     }
 
     function resetGame() {

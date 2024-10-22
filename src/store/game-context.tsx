@@ -3,8 +3,8 @@ import React, {useState} from "react";
 type GameContextObj = {
     size: number,
     gameCount: number,
-    setGameCount:  React.Dispatch<React.SetStateAction<number>>,
-    setSize:  React.Dispatch<React.SetStateAction<number>>,
+    setGameCount:  (count: number) => void,
+    setSize:  (size: number) => void,
 }
 export const GameContext = React.createContext<GameContextObj>({
     size:4,

@@ -13,14 +13,13 @@ export type ResultModalHandle = {
 
 const ResultModal = forwardRef<ResultModalHandle, ResultModalProps>(
     ({timeResult, movesCount, onClose}, ref) => {
-        const dialog = useRef<HTMLDialogElement | null>(null);
+        const dialog = useRef<HTMLDialogElement>(null);
 
         // api for this component ref
         useImperativeHandle(ref, () => ({
             open() {
-                if (dialog.current) {
-                    dialog.current.showModal();
-                }
+                //dialog.current?.showModal(); // dialog.current theoretically can be null, in case <dialog ref={dialog} ...> not invoke yet
+                dialog.current!.showModal(); // but we sure that it impossible, so mark it by "!"
             },
         }));
 
