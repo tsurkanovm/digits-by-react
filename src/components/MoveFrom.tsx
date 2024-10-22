@@ -1,20 +1,34 @@
 import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {GameContext} from "../store/game-context.jsx";
-import {getCurrentScore, initiateGoal} from "../util/core.js";
+import {getCurrentScore, initiateGoal} from "../util/core";
+import {MoveObj} from "./GameBoard.tsx";
 
-const MoveForm = ({setMove, gameOver, setGameOver}) => {
+type MoveFormProps = {
+    setMove: (move : MoveObj) => void;
+    gameOver: boolean;
+    setGameOver: (game : boolean) => void;
+};
+
+type ErrorPointerType = {
+    errorMsg: string,
+    inputIndex: number,
+} | null;
+
+const MoveForm: React.FC<MoveFormProps> = ({setMove, gameOver, setGameOver}) => {
     const {size, gameCount} =  useContext(GameContext);
-    const [values, setValues] = useState([]);
-    const [errorPointer, setErrorPointer] = useState(null);
-    const inputsRef = useRef([]);
+    const [values, setValues] = useState<string[]>([]);
+    const [errorPointer, setErrorPointer] = useState<ErrorPointerType>(null);
+    const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
         setValues(Array(size).fill(''));
     }, [size]);
 
-    function setFocus(ind) {
-        inputsRef.current[ind].setAttribute("tabindex", "0");
-        inputsRef.current[ind].focus();
+    function setFocus(ind : number) {
+        if (inputsRef.current[ind]) {
+            inputsRef.current[ind].setAttribute("tabindex", "0");
+            inputsRef.current[ind].focus();
+        }
     }
 
     useEffect(() => {
@@ -23,7 +37,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         }, 0);
     }, []);
 
-    function validateMove(newValues) {
+    function validateMove(newValues: string[]) {
         let errorMsg = '';
         let inputIndex = null;
         const uniqueValues = new Set();
@@ -55,7 +69,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         }
     }
 
-    const handleChange = (index, event) => {
+    const handleChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         const newValues = [...values];
         newValues[index] = value;
@@ -71,7 +85,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         return values.some(value => value === '');
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (!isMoveIncomplete() && errorPointer === null) {
             if (gameOver) {
@@ -80,6 +94,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
 
             takeMove(values.join(''));
             setValues(Array(size).fill(''));
+            setFocus(0);
         }
     };
 
@@ -89,7 +104,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         [gameCount, size]
     );
 
-    function takeMove(currentMove)
+    function takeMove(currentMove: string)
     {
         const currentScore = getCurrentScore(currentMove, goal);
         setMove({move:currentMove, score:currentScore, id: Math.random() * 1000});
@@ -99,7 +114,7 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         }
     }
 
-    const isInputDisabled = (index) => {
+    const isInputDisabled = (index: number) => {
         if (errorPointer === null || errorPointer.inputIndex === index) {
             return false;
         }
@@ -117,12 +132,13 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
         return errorPointer !== null || isMoveIncomplete();
     }
 
-    function isInputHasError(index, value) {
+    function isInputHasError(index: number, value: string) {
         return value !== '' && errorPointer && errorPointer.inputIndex === index;
     }
 
-    const handleKeyDown = (index, event) => {
-        if (event.key === 'Backspace' && !event.target.value && index > 0) {
+    const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
+        const target = event.target as HTMLInputElement;
+        if (event.key === 'Backspace' && !target.value && index > 0) {
             setFocus(index - 1);
         }
     };
@@ -139,10 +155,10 @@ const MoveForm = ({setMove, gameOver, setGameOver}) => {
                             value={value}
                             onChange={(e) => handleChange(index, e)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
-                            maxLength="1"
+                            maxLength={1}
                             required
                             disabled={isInputDisabled(index)}
-                            className={isInputHasError(index, value) ? 'error-border' : null}
+                            className={isInputHasError(index, value) ? 'error-border' : undefined}
                         />
                     ))}
                 </div>

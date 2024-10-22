@@ -1,6 +1,6 @@
-export function initiateGoal(size) {
-    function shuffle(array) {
-        let currentIndex = array.length, temporaryValue, randomIndex;
+export function initiateGoal(size: number) {
+    function shuffle(array: number[]) {
+        let currentIndex: number = array.length, temporaryValue, randomIndex;
         while (currentIndex !== 0) {
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex -= 1;
@@ -11,14 +11,15 @@ export function initiateGoal(size) {
         return array;
     }
 
-    let buffer = Array.from({length: 10}, (value, key) => key);
+    let buffer = Array.from({length: 10}, (_value: string, key) => key);
     const goal = shuffle(buffer).slice(0, size);
     console.log(goal);
     console.log(size);
+
     return goal;
 }
 
-export  function getCurrentScore(currentMove, goal) {
+export  function getCurrentScore(currentMove: string, goal: number[]) {
     let moveArr = Array.from(currentMove), score = { hits : 0, precise : 0 };
 
     for (let index = 0; index < moveArr.length; index++) {
@@ -34,7 +35,7 @@ export  function getCurrentScore(currentMove, goal) {
     return `${score.hits} : ${score.precise}`;
 }
 
-export function isMoveHasUniqueDigits(move)
+export function isMoveHasUniqueDigits(move: string)
 {
     let arr = move.split('');
     let newArr = arr.filter(function (value, index, self) {

@@ -1,9 +1,14 @@
-import {useRef, useState} from "react";
-import {Timer} from "./Timer.jsx";
+import React, {useState} from "react";
+import {Timer} from "./Timer";
 
-export function TimerHandler({gameOver, setTimeResult}) {
+type TimerHandlerProp = {
+    gameOver: boolean,
+    setTimeResult: (time:number) => void
+};
+
+export const TimerHandler: React.FC<TimerHandlerProp> = ({gameOver, setTimeResult}) => {
     const [time, setTime] = useState(0);
-    let timer = null;
+    let timer: number|undefined;
 
     function handleStart() {
         timer = setInterval(
