@@ -1,7 +1,10 @@
-import {useContext} from "react";
-import {GameContext} from "../store/game-context.jsx";
+import React, {useContext} from "react";
+import {GameContext} from "../store/game-context";
 
-export function Sizer({gameOver}) {
+type SizerProp = {
+    gameOver: boolean
+}
+export const Sizer: React.FC<SizerProp> = ({gameOver})  => {
     const {size, setSize} =  useContext(GameContext);
 
     const handleChange = () => {
@@ -22,4 +25,4 @@ export function Sizer({gameOver}) {
             </label>
         </div>
     )
-}
+};

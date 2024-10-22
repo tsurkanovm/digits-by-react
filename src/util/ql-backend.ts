@@ -18,10 +18,10 @@ export const SET_CURRENT_RESULT = gql`
     }
 `;
 
-export function getCurrentResultInput(size, hits, time)
+export function getCurrentResultInput(size: number, hits: number, time: number)
 {
     return {
-        size: `size_${size}`, // Adjust this according to your enum definition
+        size: `size_${size}`,
         hits: hits,
         time: time
     };

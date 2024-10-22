@@ -1,4 +1,10 @@
-export default function ErrorBlock({ title, message, onConfirm }) {
+import React from "react";
+
+type ErrorProps = {
+    title: string, message: string, onConfirm?: () => void
+};
+
+const ErrorBlock: React.FC<ErrorProps> = ({title, message, onConfirm}) => {
     return (
         <div className="error">
             <h2>{title}</h2>
@@ -13,3 +19,5 @@ export default function ErrorBlock({ title, message, onConfirm }) {
         </div>
     );
 }
+
+export default ErrorBlock;

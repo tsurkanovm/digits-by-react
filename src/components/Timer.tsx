@@ -1,4 +1,10 @@
-export function Timer({time}) {
+import React from "react";
+
+type TimerProp = {
+    time: number
+};
+
+export const Timer: React.FC<TimerProp> = ({time}) => {
     return (
         <>
             <section className="challenge">

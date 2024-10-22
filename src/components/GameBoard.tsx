@@ -1,27 +1,32 @@
-import {Results} from "./Results.jsx";
-// import Move from "./Move.jsx";
-import {useContext, useRef, useState} from "react";
-import {TimerHandler} from "./TimerHandler.jsx";
-import {Timer} from "./Timer.jsx";
-import ResultModal from "./ResultModal.jsx";
-import {Sizer} from "./Sizer.jsx";
-import ErrorBlock from "./ErrorBlock.jsx";
-import {GameContext} from "../store/game-context.jsx";
-import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.js";
+import {Results} from "./Results";
+import React, {useContext, useRef, useState} from "react";
+import {TimerHandler} from "./TimerHandler";
+import {Timer} from "./Timer";
+import ResultModal, {ResultModalHandle} from "./ResultModal";
+import {Sizer} from "./Sizer";
+import ErrorBlock from "./ErrorBlock";
+import {GameContext} from "../store/game-context";
+import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.ts";
 import {useMutation} from "@apollo/client";
-import MoveFrom from "./MoveFrom.jsx";
+import MoveFrom from "./MoveFrom";
 
-export const GameBoard = () => {
-    const [movesArray, setMove] = useState([]);
+export type MoveObj = {
+    move:string,
+    score:string,
+    id: number
+};
+
+export const GameBoard: React.FC = () => {
+    const [movesArray, setMove] = useState<MoveObj[]>([]);
     const [gameOver, setGameOver] = useState(true);
     const [timeResult, setTimeResult] = useState(0);
-    const resDialog = useRef();
+    const resDialog = useRef<ResultModalHandle>(null);
     const { size, setGameCount } = useContext(GameContext);
 
     // Apollo mutation hook
-    const [setCurrentResult, { data, loading, error }] = useMutation(SET_CURRENT_RESULT);
+    const [setCurrentResult] = useMutation(SET_CURRENT_RESULT);
 
-    function setNewMove(newMove) {
+    function setNewMove(newMove: MoveObj) {
         setMove(prevMoves => [...prevMoves, newMove])
     }
 
@@ -31,7 +36,7 @@ export const GameBoard = () => {
         setTimeResult(0);
     }
 
-    async function setTimeResultHandler(timeResult) {
+    async function setTimeResultHandler(timeResult: number) {
         setTimeResult(timeResult);
         if (timeResult) {
             try {
@@ -45,10 +50,13 @@ export const GameBoard = () => {
                 console.dir(response.data);
             } catch (error) {
                 console.error("Error sending result to server:", error);
-                return <ErrorBlock title='An error occurred!' message={error.message} />;
+                const errorMessage = (error as Error).message || 'Unknown error';
+                return <ErrorBlock title='An error occurred!' message={errorMessage}/>;
             }
 
-            resDialog.current.open();
+            if (resDialog.current) {
+                resDialog.current.open();
+            }
         }
     }
 

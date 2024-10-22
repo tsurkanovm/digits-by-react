@@ -1,6 +1,6 @@
-import {GameBoard} from "./components/GameBoard.jsx";
-import {BestResults} from "./components/BestResults.jsx";
-import {GameContextProvider} from "./store/game-context.jsx";
+import {GameBoard} from "./components/GameBoard";
+import {BestResults} from "./components/BestResults";
+import GameContextProvider from "./store/game-context";
 
 
 function App() {
