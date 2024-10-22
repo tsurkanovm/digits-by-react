@@ -1,0 +1,2 @@
+- Functions, useState, createContext
+- migrated to typescript 
