@@ -18,7 +18,6 @@ const MoveForm: React.FC<MoveFormProps> = ({setMove, gameOver, setGameOver}) => 
     const {size, gameCount} =  useContext(GameContext);
     const [values, setValues] = useState<string[]>([]);
     const [errorPointer, setErrorPointer] = useState<ErrorPointerType>(null);
-    // const inputsRef = useRef<HTMLInputElement[]>([]);
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
@@ -95,6 +94,7 @@ const MoveForm: React.FC<MoveFormProps> = ({setMove, gameOver, setGameOver}) => 
 
             takeMove(values.join(''));
             setValues(Array(size).fill(''));
+            setFocus(0);
         }
     };
 
