@@ -1,2 +1,3 @@
-- Functions, useState, createContext
-- migrated to typescript 
+- v 1.0 Functions, useState, createContext
+- v 2.0 migrated to typescript 
+- v 2.1 migrated to Redux 
