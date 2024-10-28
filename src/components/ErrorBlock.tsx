@@ -1,7 +1,7 @@
 import React from "react";
 
 type ErrorProps = {
-    title: string, message: string, onConfirm?: () => void
+    title: string, message: string, onConfirm?: () => void // null or function
 };
 
 const ErrorBlock: React.FC<ErrorProps> = ({title, message, onConfirm}) => {

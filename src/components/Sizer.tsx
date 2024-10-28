@@ -1,14 +1,16 @@
-import React, {useContext} from "react";
-import {GameContext} from "../store/game-context";
+import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import {moveActions, MoveState} from "../store/move-slice.ts";
+import {useAppSelector} from "../store/hooks.ts";
 
-type SizerProp = {
-    gameOver: boolean
-}
-export const Sizer: React.FC<SizerProp> = ({gameOver})  => {
-    const {size, setSize} =  useContext(GameContext);
+
+export const Sizer: React.FC = ()  => {
+    const dispatch = useDispatch();
+    const size = useAppSelector((state) => state.move.size);
+    const gameOver = useAppSelector((state) => state.move.gameOver);
 
     const handleChange = () => {
-        setSize(prevSize => (prevSize === 4 ? 5 : 4));
+        dispatch(moveActions.setSize());
     };
 
     return (
