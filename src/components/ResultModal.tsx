@@ -1,9 +1,9 @@
 import {forwardRef, useRef, useImperativeHandle} from "react";
 import {createPortal} from "react-dom";
+import {useAppSelector} from "../store/hooks.ts";
 
 type ResultModalProps = {
     timeResult: number;
-    movesCount: number;
     onClose: () => void;
 };
 
@@ -12,8 +12,9 @@ export type ResultModalHandle = {
 };
 
 const ResultModal = forwardRef<ResultModalHandle, ResultModalProps>(
-    ({timeResult, movesCount, onClose}, ref) => {
+    ({timeResult, onClose}, ref) => {
         const dialog = useRef<HTMLDialogElement>(null);
+        const movesArray = useAppSelector((state) => state.move.moveArray);
 
         // api for this component ref
         useImperativeHandle(ref, () => ({
@@ -31,7 +32,7 @@ const ResultModal = forwardRef<ResultModalHandle, ResultModalProps>(
     return createPortal(
         <dialog ref={dialog} className='result-modal'>
 
-            <p>You done {movesCount} moves by {timeResult} seconds</p>
+            <p>You done {movesArray.length} moves by {timeResult} seconds</p>
 
             <form method='dialog' onSubmit={onClose}>
                 <button type="submit">Close</button>

@@ -1,4 +1,6 @@
 import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux';
+import store from './store/index';
 import App from './App.jsx'
 import './index.css'
 import {ApolloClient, ApolloProvider, HttpLink, InMemoryCache} from "@apollo/client";
@@ -14,7 +16,9 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <ApolloProvider client={client}>
-            <App/>
+            <Provider store={store}>
+                <App/>
+            </Provider>
         </ApolloProvider>
     </React.StrictMode>,
 )

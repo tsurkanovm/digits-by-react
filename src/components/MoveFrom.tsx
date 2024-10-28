@@ -1,21 +1,16 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {GameContext} from "../store/game-context.jsx";
-import {getCurrentScore, initiateGoal} from "../util/core";
-import {MoveObj} from "./GameBoard.tsx";
+import React, {useEffect, useRef, useState} from 'react';
+import  {moveActions} from "../store/move-slice";
+import {useAppDispatch, useAppSelector} from "../store/hooks";
 
-type MoveFormProps = {
-    setMove: (move : MoveObj) => void;
-    gameOver: boolean;
-    setGameOver: (game : boolean) => void;
-};
 
 type ErrorPointerType = {
     errorMsg: string,
     inputIndex: number,
 } | null;
 
-const MoveForm: React.FC<MoveFormProps> = ({setMove, gameOver, setGameOver}) => {
-    const {size, gameCount} =  useContext(GameContext);
+const MoveForm: React.FC = () => {
+    const dispatch = useAppDispatch();
+    const size = useAppSelector((state) => state.move.size);
     const [values, setValues] = useState<string[]>([]);
     const [errorPointer, setErrorPointer] = useState<ErrorPointerType>(null);
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
@@ -88,31 +83,11 @@ const MoveForm: React.FC<MoveFormProps> = ({setMove, gameOver, setGameOver}) => 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (!isMoveIncomplete() && errorPointer === null) {
-            if (gameOver) {
-                setGameOver(false);
-            }
-
-            takeMove(values.join(''));
+            dispatch(moveActions.addMove(values.join('')))
             setValues(Array(size).fill(''));
             setFocus(0);
         }
     };
-
-    const goal = useMemo(() => {
-            return initiateGoal(size);
-        },
-        [gameCount, size]
-    );
-
-    function takeMove(currentMove: string)
-    {
-        const currentScore = getCurrentScore(currentMove, goal);
-        setMove({move:currentMove, score:currentScore, id: Math.random() * 1000});
-
-        if (parseInt(currentScore[currentScore.length - 1]) === size) {
-            setGameOver(true);
-        }
-    }
 
     const isInputDisabled = (index: number) => {
         if (errorPointer === null || errorPointer.inputIndex === index) {

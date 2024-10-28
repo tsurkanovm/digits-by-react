@@ -1,39 +1,33 @@
 import {Results} from "./Results";
-import React, {useContext, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {TimerHandler} from "./TimerHandler";
 import {Timer} from "./Timer";
 import ResultModal, {ResultModalHandle} from "./ResultModal";
 import {Sizer} from "./Sizer";
 import ErrorBlock from "./ErrorBlock";
-import {GameContext} from "../store/game-context";
 import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.ts";
 import {useMutation} from "@apollo/client";
 import MoveFrom from "./MoveFrom";
+import {useAppDispatch, useAppSelector} from "../store/hooks";
+import {moveActions} from "../store/move-slice.ts";
 
-export type MoveObj = {
-    move:string,
-    score:string,
-    id: number
-};
+
 
 export const GameBoard: React.FC = () => {
-    const [movesArray, setMove] = useState<MoveObj[]>([]);
-    const [gameOver, setGameOver] = useState(true);
+    const dispatch = useAppDispatch();
+    const size = useAppSelector((state) => state.move.size);
+    const movesArray = useAppSelector((state) => state.move.moveArray);
     const [timeResult, setTimeResult] = useState(0);
     const resDialog = useRef<ResultModalHandle>(null);
-    const { size, setGameCount } = useContext(GameContext);
 
     // Apollo mutation hook
     const [setCurrentResult] = useMutation(SET_CURRENT_RESULT);
 
-    function setNewMove(newMove: MoveObj) {
-        //setMove(prevMoves => [...prevMoves, newMove]);
-        setMove(prevMoves => prevMoves.concat(newMove)); // the same as above
-    }
-
     function resetGame() {
-        setGameCount((prev) => prev + 1);
-        setMove([]);
+        // @ts-ignore
+        dispatch(moveActions.resetGame());
+        // setGameCount((prev) => prev + 1);
+        // setMove([]);
         setTimeResult(0);
     }
 
@@ -63,16 +57,15 @@ export const GameBoard: React.FC = () => {
 
     return (
         <>
-            <Sizer gameOver={gameOver}/>
-            <Results moves={movesArray}/>
-            {/*<Move setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>*/}
-            <MoveFrom  setMove={setNewMove} gameOver={gameOver} setGameOver={setGameOver}/>
+            <Sizer/>
+            <Results/>
+            <MoveFrom />
             { movesArray.length && !timeResult ?
-                <TimerHandler gameOver={gameOver} setTimeResult={setTimeResultHandler}/>
+                <TimerHandler setTimeResult={setTimeResultHandler}/>
                 :
                 <Timer time={0}/>
             }
-            <ResultModal ref={resDialog} timeResult={timeResult} movesCount={movesArray.length} onClose={resetGame}/>
+            <ResultModal ref={resDialog} timeResult={timeResult} onClose={resetGame}/>
         </>
     );
 };

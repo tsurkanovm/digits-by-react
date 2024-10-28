@@ -1,13 +1,10 @@
 import React, {useState} from "react";
 import {Timer} from "./Timer";
+import {useAppSelector} from "../store/hooks.ts";
 
-type TimerHandlerProp = {
-    gameOver: boolean,
-    setTimeResult: (time:number) => void
-};
-
-export const TimerHandler: React.FC<TimerHandlerProp> = ({gameOver, setTimeResult}) => {
+export const TimerHandler: React.FC<{setTimeResult: (time:number) => void}> = (props) => {
     const [time, setTime] = useState(0);
+    const gameOver = useAppSelector((state) => state.move.gameOver);
     let timer: number|undefined;
 
     function handleStart() {
@@ -21,7 +18,7 @@ export const TimerHandler: React.FC<TimerHandlerProp> = ({gameOver, setTimeResul
     }
     function handleStop() {
         clearInterval(timer);
-        setTimeResult(time);
+        props.setTimeResult(time);
     }
 
     if (gameOver) {
