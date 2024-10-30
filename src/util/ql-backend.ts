@@ -1,4 +1,11 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
+
+// const client = new ApolloClient({
+//     link: new HttpLink({
+//         uri: 'http://fin.local/graphql',
+//     }),
+//     cache: new InMemoryCache()
+// });
 
 export const GET_BEST_RESULTS = gql`
     query GetBestResults($size: SizeEnum!) {
@@ -26,3 +33,15 @@ export function getCurrentResultInput(size: number, hits: number, time: number)
         time: time
     };
 }
+
+// export const bestResultLoader = async () => {
+//     try {
+//         const { data } = await client.query({
+//             query: GET_BEST_RESULTS,
+//         });
+//
+//         return data;
+//     } catch (error) {
+//         throw new Response('Failed to fetch best results data', { status: 500 });
+//     }
+// };

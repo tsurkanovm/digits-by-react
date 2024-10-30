@@ -1,21 +1,13 @@
 import React from "react";
+import {useRouteError} from "react-router-dom";
 
-type ErrorProps = {
-    title: string, message: string, onConfirm?: () => void // null or function
-};
+const ErrorBlock: React.FC = () => {
+    const error: any = useRouteError();
 
-const ErrorBlock: React.FC<ErrorProps> = ({title, message, onConfirm}) => {
     return (
         <div className="error">
-            <h2>{title}</h2>
-            <p>{message}</p>
-            {onConfirm && (
-                <div id="confirmation-actions">
-                    <button onClick={onConfirm} className="button">
-                        Okay
-                    </button>
-                </div>
-            )}
+            <h2>Something wrong</h2>
+            <p>{error.message}</p>
         </div>
     );
 }

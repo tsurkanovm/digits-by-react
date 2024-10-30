@@ -4,7 +4,6 @@ import {TimerHandler} from "./TimerHandler";
 import {Timer} from "./Timer";
 import ResultModal, {ResultModalHandle} from "./ResultModal";
 import {Sizer} from "./Sizer";
-import ErrorBlock from "./ErrorBlock";
 import {getCurrentResultInput, SET_CURRENT_RESULT} from "../util/ql-backend.ts";
 import {useMutation} from "@apollo/client";
 import MoveFrom from "./MoveFrom";
@@ -13,7 +12,7 @@ import {moveActions} from "../store/move-slice.ts";
 
 
 
-export const GameBoard: React.FC = () => {
+export const Digits: React.FC = () => {
     const dispatch = useAppDispatch();
     const size = useAppSelector((state) => state.move.size);
     const movesArray = useAppSelector((state) => state.move.moveArray);
@@ -26,8 +25,6 @@ export const GameBoard: React.FC = () => {
     function resetGame() {
         // @ts-ignore
         dispatch(moveActions.resetGame());
-        // setGameCount((prev) => prev + 1);
-        // setMove([]);
         setTimeResult(0);
     }
 
@@ -44,9 +41,9 @@ export const GameBoard: React.FC = () => {
                 console.log("Response from server:", response.data);
                 console.dir(response.data);
             } catch (error) {
-                console.error("Error sending result to server:", error);
                 const errorMessage = (error as Error).message || 'Unknown error';
-                return <ErrorBlock title='An error occurred!' message={errorMessage}/>;
+
+                throw new Error(errorMessage);
             }
 
             if (resDialog.current) {

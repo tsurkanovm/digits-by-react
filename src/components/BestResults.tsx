@@ -1,14 +1,13 @@
 
-import { GameContext } from "../store/game-context.tsx";
-import ErrorBlock from "./ErrorBlock";
 import {GET_BEST_RESULTS} from "../util/ql-backend.ts";
-import {Key, useContext} from "react";
+import {Key} from "react";
 import {useQuery} from "@apollo/client";
+import {useAppSelector} from "../store/hooks.ts";
 
 export function BestResults() {
-    const {size, gameCount} = useContext(GameContext);
+    //const data = useLoaderData();
+    const size = useAppSelector((state) => state.move.size);
 
-    console.log('New game #', gameCount);
     const {loading, data, error}
         = useQuery(GET_BEST_RESULTS, {
         variables: {size: `size_${size}`},
@@ -16,7 +15,7 @@ export function BestResults() {
     });
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <ErrorBlock title='An error occurred!' message={error.message} />;
+    if (error) throw new Error(error.message);
 
     if (data) {
         return (

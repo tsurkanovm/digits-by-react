@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import  {moveActions} from "../store/move-slice";
 import {useAppDispatch, useAppSelector} from "../store/hooks";
 
-
 type ErrorPointerType = {
     errorMsg: string,
     inputIndex: number,
